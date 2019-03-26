@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 /TourGuideApp/TourGuideApp.Android/google-services.json
+/TourGuideApp/TourGuideApp.iOS/GoogleService-Info.plist
