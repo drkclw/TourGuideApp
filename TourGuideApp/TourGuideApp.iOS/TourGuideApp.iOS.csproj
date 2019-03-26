@@ -98,7 +98,6 @@
     <Compile Include="AppDelegate.cs" />
     <Compile Include="Services\FirebaseAuthenticatorService.cs" />
     <None Include="Entitlements.plist" />
-    <BundleResource Include="GoogleService-Info.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
