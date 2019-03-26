@@ -1,6 +1,10 @@
 ﻿using Autofac;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using System;
 using TourGuideApp.Services;
+using TourGuideApp.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -10,6 +14,7 @@ namespace TourGuideApp
     public partial class App : Application
     {
         public IContainer Container { get; }
+        public string AuthToken { get; set; }
 
         public App(Module module)
         {
@@ -18,9 +23,17 @@ namespace TourGuideApp
             MainPage = new NavigationPage(new LoginPage());
         }
 
+        public App()
+        {
+            InitializeComponent();
+            MainPage = new NavigationPage(new LoginPage());
+        }
+
         protected override void OnStart()
         {
-            // Handle when your app starts
+            AppCenter.Start("android={Your Android App secret here};" + 
+                "uwp={Your UWP App secret here};" + "ios={Your iOS App secret here}", 
+                typeof(Analytics), typeof(Crashes));
         }
 
         protected override void OnSleep()
@@ -35,7 +48,8 @@ namespace TourGuideApp
 
         IContainer BuildContainer(Module module)
         {
-            var builder = new ContainerBuilder();            
+            var builder = new ContainerBuilder();
+            builder.RegisterType<LoginViewModel>().AsSelf();
             builder.RegisterType<NavigationService>().AsSelf().SingleInstance();
             builder.RegisterModule(module);
             return builder.Build();

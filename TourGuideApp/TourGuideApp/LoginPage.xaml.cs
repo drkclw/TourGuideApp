@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Autofac;
+using TourGuideApp.ViewModels;
 using Xamarin.Forms;
 
 namespace TourGuideApp
@@ -12,6 +9,7 @@ namespace TourGuideApp
         public LoginPage()
         {
             InitializeComponent();
+            this.BindingContext = (Application.Current as App).Container.Resolve<LoginViewModel>();
         }
     }
 }

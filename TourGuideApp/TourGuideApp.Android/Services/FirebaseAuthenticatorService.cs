@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Firebase.Auth;
+using Microsoft.AppCenter.Crashes;
 using TourGuideApp.Services;
 
 namespace TourGuideApp.Droid.Services
@@ -8,9 +10,28 @@ namespace TourGuideApp.Droid.Services
     {
         public async Task<string> LoginWithEmailPassword(string email, string password)
         {
-            var user = await FirebaseAuth.Instance.SignInWithEmailAndPasswordAsync(email, password);
-            var token = await user.User.GetIdTokenAsync(false);
-            return token.Token;
+            try
+            {
+                var user = await FirebaseAuth.Instance.SignInWithEmailAndPasswordAsync(email, password);
+                var token = await user.User.GetIdTokenAsync(false);
+                return token.Token;
+            }catch(FirebaseAuthInvalidUserException faiuex)
+            {
+                var properties = new Dictionary<string, string>();
+                if (faiuex.Message.Contains("There is no user record corresponding to this identifier"))
+                {
+                    properties.Add("Where", "Login with email and password.");
+                    properties.Add("Issue", "User does not exist.");                    
+                }
+                else
+                {
+                    properties.Add("Where", "Login with email and password.");
+                    properties.Add("Issue", "Unknown issue.");
+                }
+                Crashes.TrackError(faiuex, properties);
+
+                return string.Empty;
+            }
         }
     }
 }
