@@ -34,5 +34,24 @@ namespace TourGuideApp.iOS.Services
                 return string.Empty;
             }
         }
+
+        public async Task<string> CreateUserWithEmailPassword(string email, string password)
+        {
+            try
+            {
+                var user = await Auth.DefaultInstance.SignInWithPasswordAsync(email, password);
+                return await user.User.GetIdTokenAsync(false);
+            }
+            catch (Exception ex)
+            {
+                var properties = new Dictionary<string, string>();
+                properties.Add("Where", "Create user with email and password.");
+                properties.Add("Issue", "Unknown issue.");
+                
+                Crashes.TrackError(ex, properties);
+
+                return string.Empty;
+            }
+        }
     }
 }
